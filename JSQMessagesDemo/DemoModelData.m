@@ -175,19 +175,6 @@
     [self.messages addObject:photoMessage];
 }
 
-- (void)addLocationMediaMessageCompletion:(JSQLocationMediaItemCompletionBlock)completion
-{
-    CLLocation *ferryBuildingInSF = [[CLLocation alloc] initWithLatitude:37.795313 longitude:-122.393757];
-    
-    JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
-    [locationItem setLocation:ferryBuildingInSF withCompletionHandler:completion];
-    
-    JSQMessage *locationMessage = [JSQMessage messageWithSenderId:kJSQDemoAvatarIdSquires
-                                                      displayName:kJSQDemoAvatarDisplayNameSquires
-                                                            media:locationItem];
-    [self.messages addObject:locationMessage];
-}
-
 - (void)addVideoMediaMessage
 {
     // don't have a real video, just pretending

@@ -212,18 +212,6 @@
                 
                 newMediaData = photoItemCopy;
             }
-            else if ([copyMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
-                JSQLocationMediaItem *locationItemCopy = [((JSQLocationMediaItem *)copyMediaData) copy];
-                locationItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-                newMediaAttachmentCopy = [locationItemCopy.location copy];
-                
-                /**
-                 *  Set location to nil to simulate "downloading" the location data
-                 */
-                locationItemCopy.location = nil;
-                
-                newMediaData = locationItemCopy;
-            }
             else if ([copyMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                 JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
                 videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
@@ -297,11 +285,7 @@
                     ((JSQPhotoMediaItem *)newMediaData).image = newMediaAttachmentCopy;
                     [self.collectionView reloadData];
                 }
-                else if ([newMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
-                    [((JSQLocationMediaItem *)newMediaData)setLocation:newMediaAttachmentCopy withCompletionHandler:^{
-                        [self.collectionView reloadData];
-                    }];
-                }
+
                 else if ([newMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                     ((JSQVideoMediaItem *)newMediaData).fileURL = newMediaAttachmentCopy;
                     ((JSQVideoMediaItem *)newMediaData).isReadyToPlay = YES;
@@ -365,7 +349,7 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Send photo", nil), NSLocalizedString(@"Send location", nil), NSLocalizedString(@"Send video", nil), NSLocalizedString(@"Send video thumbnail", nil), NSLocalizedString(@"Send audio", nil), nil];
+                                              otherButtonTitles:NSLocalizedString(@"Send photo", nil),  NSLocalizedString(@"Send video", nil), NSLocalizedString(@"Send video thumbnail", nil), NSLocalizedString(@"Send audio", nil), nil];
     
     [sheet showFromToolbar:self.inputToolbar];
 }
@@ -383,24 +367,15 @@
             break;
             
         case 1:
-        {
-            __weak UICollectionView *weakView = self.collectionView;
-            
-            [self.demoData addLocationMediaMessageCompletion:^{
-                [weakView reloadData];
-            }];
-        }
-            break;
-            
-        case 2:
+
             [self.demoData addVideoMediaMessage];
             break;
             
-        case 3:
+        case 2:
             [self.demoData addVideoMediaMessageWithThumbnail];
             break;
             
-        case 4:
+        case 3:
             [self.demoData addAudioMediaMessage];
             break;
     }
