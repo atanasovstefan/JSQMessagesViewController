@@ -50,7 +50,12 @@
      */
     self.demoData = [[DemoModelData alloc] init];
     
+
+    /**
+     *  Set up message accessory button delegate and configuration
+     */
     
+
     /**
      *  You can set custom avatar sizes
      */
@@ -207,18 +212,6 @@
                 
                 newMediaData = photoItemCopy;
             }
-            else if ([copyMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
-                JSQLocationMediaItem *locationItemCopy = [((JSQLocationMediaItem *)copyMediaData) copy];
-                locationItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-                newMediaAttachmentCopy = [locationItemCopy.location copy];
-                
-                /**
-                 *  Set location to nil to simulate "downloading" the location data
-                 */
-                locationItemCopy.location = nil;
-                
-                newMediaData = locationItemCopy;
-            }
             else if ([copyMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                 JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
                 videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
@@ -290,11 +283,7 @@
                     ((JSQPhotoMediaItem *)newMediaData).image = newMediaAttachmentCopy;
                     [self.collectionView reloadData];
                 }
-                else if ([newMediaData isKindOfClass:[JSQLocationMediaItem class]]) {
-                    [((JSQLocationMediaItem *)newMediaData)setLocation:newMediaAttachmentCopy withCompletionHandler:^{
-                        [self.collectionView reloadData];
-                    }];
-                }
+
                 else if ([newMediaData isKindOfClass:[JSQVideoMediaItem class]]) {
                     ((JSQVideoMediaItem *)newMediaData).fileURL = newMediaAttachmentCopy;
                     ((JSQVideoMediaItem *)newMediaData).isReadyToPlay = YES;
@@ -357,7 +346,7 @@
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"Send photo", @"Send location", @"Send video", @"Send audio", nil];
+                                              otherButtonTitles:@"Send photo", @"Send video", @"Send audio", nil];
     
     [sheet showFromToolbar:self.inputToolbar];
 }
@@ -375,13 +364,8 @@
             break;
             
         case 1:
-        {
-            __weak UICollectionView *weakView = self.collectionView;
-            
-            [self.demoData addLocationMediaMessageCompletion:^{
-                [weakView reloadData];
-            }];
-        }
+
+            [self.demoData addVideoMediaMessage];
             break;
             
         case 2:
